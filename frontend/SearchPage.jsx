@@ -1,3 +1,14 @@
+import profileImage from "../src/images/profile.jpg";
+import {
+  MapPin,
+  ExternalLink,
+  BriefcaseBusiness,
+  CalendarDays,
+  BookOpen,
+  Users,
+  UserPlus,
+} from "lucide-react";
+
 function SearchPage() {
   return (
     <div className="bg-gray-800 text-white h-full flex flex-col">
@@ -24,35 +35,57 @@ function SearchPage() {
           <div className="w-full h-auto  rounded-lg mb-4 flex p-4">
             {/* image div */}
             <div className="border-2 border-gray-700 rounded-full w-32 h-32 overflow-hidden">
-              <img />
+              <img src={profileImage} alt="Profile" />
             </div>
             {/* info div */}
-            <div className="border-2 border-gray-700 rounded-lg w-1/2 h-auto ml-4 p-4 flex flex-col justify-start items-start">
+            <div className="w-1/2 h-auto ml-4 p-4 flex flex-col justify-start items-start">
               <h2 className="text-xl font-bold">John Doe</h2>
               <p className="text-gray-400">Software Engineer</p>
+              <p className="text-gray-400 text-sm">San Francisco, CA</p>
+              <div className="flex gap-8 mt-4 text-gray-400 text-sm">
+                <span className="flex items-center gap-1">
+                  <MapPin size={16} />
+                  Location
+                </span>
+                <span className="flex items-center gap-1">
+                  <ExternalLink size={16} />
+                  Portfolio
+                </span>
+                <span className="flex items-center gap-1">
+                  <CalendarDays size={16} />
+                  Joined
+                </span>
+              </div>
             </div>
-            <button className=" text-green-500 border-2 border-green-500 ml-70 px-4 rounded w-40 h-10 transition-colors duration-300">
+            <button className=" text-green-500 border-2 border-green-500 ml-70 px-4 rounded w-50 h-10 transition-colors duration-300 flex justify-center items-center gap-2 hover:bg-green-500 hover:text-white">
               View on GitHub
+              <ExternalLink size={16} />
             </button>
           </div>
           {/* bottom div */}
           <div className="w-full h-32 rounded-lg flex gap-2 justify-center items-center">
             <div className="border-2 border-gray-600  h-full w-1/3 rounded flex items-center gap-4 p-4">
-              <span className="w-15">icon</span>
+              <span className="w-15 ml-4">
+                <BookOpen size={24} />
+              </span>
               <div>
                 <h2 className="text-gray-400">Repositories</h2>
                 <p className="text-white font-bold text-2xl">10</p>
               </div>
             </div>
             <div className="border-2 border-gray-600  h-full w-1/3 rounded flex items-center gap-4 p-4">
-              <span className="w-15">icon</span>
+              <span className="w-15 ml-4">
+                <Users size={24} />
+              </span>
               <div>
                 <h2 className="text-gray-400">Followers</h2>
                 <p className="text-white font-bold text-2xl">50</p>
               </div>
             </div>
             <div className="border-2 border-gray-600  h-full w-1/3 rounded flex items-center gap-4 p-4">
-              <span className="w-15">icon</span>
+              <span className="w-15 ml-4">
+                <UserPlus size={24} />
+              </span>
               <div>
                 <h2 className="text-gray-400">Following</h2>
                 <p className="text-white font-bold text-2xl">100</p>
