@@ -1,3 +1,4 @@
+import {useState} from "react";
 import profileImage from "../src/images/profile.jpg";
 import {
   MapPin,
@@ -10,6 +11,34 @@ import {
 } from "lucide-react";
 
 function SearchPage() {
+  const [username, setUsername] = useState("");
+  const [user, setUser] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false); // state to track loading status
+
+  // search function to fetch GitHub profile data
+  const handleSearch = async () => {
+    setError(null); // reset error state before making a new request
+    setUser(null); // reset user state before making a new request
+    setLoading(true); // set loading state to true before making a new request
+    try {
+      const response = await fetch(`https://api.github.com/users/${username}`);
+
+      if (!response.ok) {
+        setError("User not found. Please check the username and try again.");
+        return; // exit the function if the response is not ok
+      }
+
+      const data = await response.json(); //convert the response to JSON so we can access it as an object
+      setUser(data);
+    } catch (error) {
+      setError(
+        "An error occurred while fetching the data. Please try again later.",
+      );
+    } finally {
+      setLoading(false); // set loading state to false when the request is complete or fails
+    }
+  };
   return (
     <div className="bg-gray-800 text-white h-full flex flex-col">
       <div className="flex justify-between items-center py-4 px-40 border-b-2 border-gray-700">
@@ -24,24 +53,55 @@ function SearchPage() {
             type="search"
             placeholder="Enter github username"
             className="w-full px-4 rounded-lg focus:outline-none "
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
-          <button className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded w-1/4 transition-colors duration-300">
-            Search
+          <button onClick={handleSearch} className="bg-green-700 hover:bg-green-900 text-white font-bold py-2 px-4 rounded w-1/4 transition-colors duration-300">
+            {loading ? "Searching..." : "Search"}
           </button>
         </div>
+        {error && <p className="text-red-500 text-center mt-4">{error}</p>}
+        
+    
         {/* profile division */}
+        
         <div className="profile flex flex-col items-center mt-10 border-2 border-gray-700 w-4/5 mx-auto rounded-lg p-4">
           {/* top div */}
           <div className="w-full h-auto  rounded-lg mb-4 flex p-4">
             {/* image div */}
-            <div className="border-2 border-gray-700 rounded-full w-32 h-32 overflow-hidden">
+            {user ? (
+              <div className="border-2 border-gray-700 rounded-full w-32 h-32 overflow-hidden">
+              <img src={user.avatar_url} alt="Profile" className="w-full h-full object-cover" />
+            </div>
+            ):(
+              <div className="border-2 border-gray-700 rounded-full w-32 h-32 overflow-hidden">
               <img src={profileImage} alt="Profile" />
             </div>
+            )}
             {/* info div */}
-            <div className="w-1/2 h-auto ml-4 p-4 flex flex-col justify-start items-start">
-              <h2 className="text-xl font-bold">John Doe</h2>
-              <p className="text-gray-400">Software Engineer</p>
-              <p className="text-gray-400 text-sm">San Francisco, CA</p>
+           {user ? ( <div className="w-1/2 h-auto ml-4 p-4 flex flex-col justify-start items-start">
+              <h2 className="text-xl font-bold">{user ? user.name : "User Name"}</h2>
+              <p className="text-gray-400">{user ? "@"+ user.login : "Not Available"}</p>
+              <p className="text-gray-400 text-sm">{user ? user.bio : "User bio not available"}</p>
+              <div className="flex gap-8 mt-4 text-gray-400 text-sm">
+                <span className="flex items-center gap-1">
+                  <MapPin size={16} />
+                  {user && user.location ? user.location : "Not Provided"}
+                </span>
+                <span className="flex items-center gap-1">
+                  <ExternalLink size={16} />
+                  {user && user.blog ? user.blog : "Not Provided"}
+                </span>
+                <span className="flex items-center gap-1">
+                  <CalendarDays size={16} />
+                  {user && user.created_at ? user.created_at : "Not Provided"}
+                </span>
+              </div>
+            </div>):(
+               <div className="w-1/2 h-auto ml-4 p-4 flex flex-col justify-start items-start">
+              <h2 className="text-xl font-bold">User Name</h2>
+              <p className="text-gray-400">@example</p>
+              <p className="text-gray-400 text-sm">User bio</p>
               <div className="flex gap-8 mt-4 text-gray-400 text-sm">
                 <span className="flex items-center gap-1">
                   <MapPin size={16} />
@@ -53,10 +113,11 @@ function SearchPage() {
                 </span>
                 <span className="flex items-center gap-1">
                   <CalendarDays size={16} />
-                  Joined
+                 Created at
                 </span>
               </div>
-            </div>
+            </div>)}
+            
             <button className=" text-green-500 border-2 border-green-500 ml-70 px-4 rounded w-50 h-10 transition-colors duration-300 flex justify-center items-center gap-2 hover:bg-green-500 hover:text-white">
               View on GitHub
               <ExternalLink size={16} />
@@ -93,6 +154,8 @@ function SearchPage() {
             </div>
           </div>
         </div>
+
+        {/* repo heading */}
         <div className="w-full flex justify-between px-40 mt-8">
           <p>Repositories</p>
           <p>4 total Repos</p>
@@ -104,6 +167,8 @@ function SearchPage() {
           <div className="w-full h-40 border-2 border-gray-600 rounded"></div>
           <div className="w-full h-40 border-2 border-gray-600 rounded"></div>
         </div>
+        
+
       </div>
     </div>
   );
